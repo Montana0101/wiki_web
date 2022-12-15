@@ -16,7 +16,7 @@ else
   # commit可以换成cz工具
   git add -A && git commit -m "$msg"
   echo "commit完毕，开始拉取以及推送代码\n"
-  git pull && git push
+  git push origin master
   # 判断上一条命令是否成功
   if [ $? -eq 0 ]; then
     echo "\n\n流程结束，完成提交。"
