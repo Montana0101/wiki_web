@@ -53,19 +53,81 @@
         minHeight: '280px',
       }"
     >
-      Content
+      <a-list item-layout="vertical" size="large" :grid="{gutter:20,column:3}" :data-source="ebooks">
+
+    <template #renderItem="{ item }">
+      <a-list-item key="item.name">
+        <template #actions>
+          <span v-for="{ type, text } in actions" :key="type">
+            <component :is="type" style="margin-right: 8px" />
+            {{ text }}
+          </span>
+        </template>
+
+        <a-list-item-meta :description="item.description">
+          <template #title>
+            <a :href="item.href">{{ item.name }}</a>
+          </template>
+          <template #avatar><a-avatar :src="item.cover" /></template>
+        </a-list-item-meta>
+        {{ item.content }}
+      </a-list-item>
+    </template>
+  </a-list>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import { defineComponent, ref, onMounted, reactive, toRef } from "vue";
+import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 
+import axios from "axios";
+
+const listData: Record<string, string>[] = [];
+
+for (let i = 0; i < 23; i++) {
+  listData.push({
+    href: 'https://www.antdv.com/',
+    avatar: 'https://joeschmoe.io/api/v1/random',
+    description:
+      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+    content:
+      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+  });
+}
 export default defineComponent({
   name: "HomeView",
-  components: {
-    HelloWorld,
+  components:{
+    StarOutlined,
+    LikeOutlined,
+    MessageOutlined,
+  },
+  setup() {
+    console.log("setup");
+    const ebooks = ref();
+    const ebooks1 = reactive({
+      books: [],
+    });
+    onMounted(() => {
+      axios.get("http://127.0.0.1:8081/ebook/list?name=Spring").then((res) => {
+        ebooks.value = res.data.content;
+        ebooks1.books = res.data.content;
+      });
+    });
+
+    const actions: Record<string, string>[] = [
+      { type: 'StarOutlined', text: '156' },
+      { type: 'LikeOutlined', text: '156' },
+      { type: 'MessageOutlined', text: '2' },
+    ];
+
+    return {
+      listData,
+      ebooks,
+      ebooks2: toRef(ebooks1, "books"),
+      actions
+    };
   },
 });
 </script>
