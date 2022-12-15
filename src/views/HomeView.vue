@@ -110,7 +110,7 @@ export default defineComponent({
       books: [],
     });
     onMounted(() => {
-      axios.get("http://127.0.0.1:8081/ebook/list?name=Spring").then((res) => {
+      axios.get("/ebook/list").then((res) => {
         ebooks.value = res.data.content;
         ebooks1.books = res.data.content;
       });
