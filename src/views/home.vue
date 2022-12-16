@@ -97,7 +97,7 @@ for (let i = 0; i < 23; i++) {
   });
 }
 export default defineComponent({
-  name: "HomeView",
+  name: "Home",
   components:{
     StarOutlined,
     LikeOutlined,
